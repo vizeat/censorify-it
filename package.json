@@ -1,0 +1,40 @@
+{
+  "name": "deletify-it",
+  "version": "0.0.0",
+  "description": "Delete unwanted URLs, emails and telephone numbers to prevent spam",
+  "author": "vizeat",
+  "homepage": "https://github.com/vizeat/deletify-it",
+  "bugs": {
+    "url": "https://github.com/vizeat/deletify-it/issues"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vizeat/deletify-it.git"
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "dependencies": {
+    "linkify-it": "^2.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-export-default-from": "^7.0.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-syntax-import-meta": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "core-js": "^3.0.0"
+  },
+  "scripts": {
+    "build": "BABEL_ENV=production babel src/ --out-dir dist/ --copy-files",
+    "pub": "yarn build && yarn publish && git push --follow-tags"
+  }
+}
