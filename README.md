@@ -1,24 +1,24 @@
-# deletify-it
-Delete unwanted URLs, emails and telephone numbers to prevent spam
+# censorify-it
+Censor unwanted URLs, emails and telephone numbers to prevent spam
 
-Annoyed by users sending links to external websites? Frustrated by clients taking their payment offline? Just don't want to let anyone contact anyone else via email or telephone? DeletifyIt is the answer!
+Annoyed by users sending links to external websites? Frustrated by clients taking their payment offline? Just don't want to let anyone contact anyone else via email or telephone? CensorifyIt is the answer!
 
 Built as an extension of [LinkifyIt](https://github.com/markdown-it/linkify-it)
 
 ## Install
 
 ```
-yarn add deletify-it
+yarn add censorify-it
 ```
 
 ## Usage
 
 ```js
-import DeletifyIt from 'deletify-it'
+import CensorifyIt from 'censorify-it'
 
-const deletify = new DeletifyIt()
+const censorify = new CensorifyIt()
 
-console.log(deletify.match('Site github.com!'));
+console.log(censorify.match('Site github.com!'));
   // [ {
   //   schema: "",
   //   index: 5,
@@ -27,7 +27,7 @@ console.log(deletify.match('Site github.com!'));
   //   text: "⏤⏤⏤⏤",
   // } ]
 
-console.log(deletify.match('My phone number is 01 01 01 01 01'));
+console.log(censorify.match('My phone number is 01 01 01 01 01'));
   // [ {
   //   schema: "",
   //   index: 19,
@@ -40,10 +40,10 @@ console.log(deletify.match('My phone number is 01 01 01 01 01'));
 To change the replacement string:
 
 ```js
-const deletify = new DeletifyIt()
-deletify.set({ replacementText: 'REMOVED' })
+const censorify = new CensorifyIt()
+censorify.set({ replacementText: 'REMOVED' })
 
-console.log(deletify.match('My phone number is 01 01 01 01 01'));
+console.log(censorify.match('My phone number is 01 01 01 01 01'));
   // [ {
   //   schema: "",
   //   index: 19,
@@ -58,10 +58,10 @@ Accepts an exception regex which will not remove matched terms
 ```js
 const mysiteRegex = new RegExp(/mysite.com/g)
 
-const deletify = new DeletifyIt()
-deletify.set({ exception: mysiteRegex })
+const censorify = new CensorifyIt()
+censorify.set({ exception: mysiteRegex })
 
-console.log(deletify.match('Check out github.com or mysite.com'));
+console.log(censorify.match('Check out github.com or mysite.com'));
   // [ {
   //   schema: "",
   //   index: 10,

@@ -2,7 +2,7 @@ import LinkifyIt from 'linkify-it';
 const REPLACEMENT_TEXT = '⏤⏤⏤⏤';
 const telRegex = /(\(?\+?[0-9]+\)?)+[0-9_\- ()]{6,}[0-9]/g;
 
-function DeletifyIt() {
+function CensorifyIt() {
   LinkifyIt.call(this);
   this.add('+', {
     validate: function (text, pos, self) {
@@ -26,9 +26,9 @@ function DeletifyIt() {
   this.replacementText = REPLACEMENT_TEXT;
 }
 
-DeletifyIt.prototype = Object.create(LinkifyIt.prototype);
+CensorifyIt.prototype = Object.create(LinkifyIt.prototype);
 
-DeletifyIt.prototype.set = function set({
+CensorifyIt.prototype.set = function set({
   exception,
   replacementText = REPLACEMENT_TEXT,
   ...options
@@ -47,7 +47,7 @@ function Match(match, text) {
   this.text = text;
 }
 
-DeletifyIt.prototype.match = function match(text) {
+CensorifyIt.prototype.match = function match(text) {
   if (!text) return [];
   const matches = LinkifyIt.prototype.match.call(this, text);
   if (!matches) return [];
@@ -60,4 +60,4 @@ DeletifyIt.prototype.match = function match(text) {
   });
 };
 
-export default DeletifyIt;
+export default CensorifyIt;

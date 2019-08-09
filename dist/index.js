@@ -16,7 +16,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 var REPLACEMENT_TEXT = '⏤⏤⏤⏤';
 var telRegex = /(\(?\+?[0-9]+\)?)+[0-9_\- ()]{6,}[0-9]/g;
 
-function DeletifyIt() {
+function CensorifyIt() {
   _linkifyIt["default"].call(this);
 
   this.add('+', {
@@ -41,9 +41,9 @@ function DeletifyIt() {
   this.replacementText = REPLACEMENT_TEXT;
 }
 
-DeletifyIt.prototype = Object.create(_linkifyIt["default"].prototype);
+CensorifyIt.prototype = Object.create(_linkifyIt["default"].prototype);
 
-DeletifyIt.prototype.set = function set(_ref) {
+CensorifyIt.prototype.set = function set(_ref) {
   var exception = _ref.exception,
       _ref$replacementText = _ref.replacementText,
       replacementText = _ref$replacementText === void 0 ? REPLACEMENT_TEXT : _ref$replacementText,
@@ -64,7 +64,7 @@ function Match(match, text) {
   this.text = text;
 }
 
-DeletifyIt.prototype.match = function match(text) {
+CensorifyIt.prototype.match = function match(text) {
   var _this = this;
 
   if (!text) return [];
@@ -81,5 +81,5 @@ DeletifyIt.prototype.match = function match(text) {
   });
 };
 
-var _default = DeletifyIt;
+var _default = CensorifyIt;
 exports["default"] = _default;
