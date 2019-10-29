@@ -44,7 +44,7 @@ function Match(match, text) {
   this.index = match.index;
   this.lastIndex = match.lastIndex;
   this.raw = match.text;
-  this.text = text;
+  this.text = text.trim();
 }
 
 CensorifyIt.prototype.match = function match(text) {
