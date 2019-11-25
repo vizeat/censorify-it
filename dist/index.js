@@ -15,6 +15,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 var REPLACEMENT_TEXT = '⏤⏤⏤⏤';
 var telRegex = /(\(?\+?[0-9]+\)?)+[0-9_\- ()]{6,}[0-9]/g;
+var dateRegex = /(2\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])/;
 
 function CensorifyIt() {
   _linkifyIt["default"].call(this);
@@ -25,7 +26,7 @@ function CensorifyIt() {
         self.re.phone = new RegExp(telRegex);
       }
 
-      if (self.re.phone.test(text)) {
+      if (self.re.phone.test(text) && !dateRegex.test(text)) {
         return text.match(self.re.phone)[0].length;
       }
 

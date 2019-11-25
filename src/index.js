@@ -1,6 +1,7 @@
 import LinkifyIt from 'linkify-it';
 const REPLACEMENT_TEXT = '⏤⏤⏤⏤';
 const telRegex = /(\(?\+?[0-9]+\)?)+[0-9_\- ()]{6,}[0-9]/g;
+const dateRegex = /(2\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])/
 
 function CensorifyIt() {
   LinkifyIt.call(this);
@@ -10,7 +11,7 @@ function CensorifyIt() {
         self.re.phone = new RegExp(telRegex);
       }
 
-      if (self.re.phone.test(text)) {
+      if (self.re.phone.test(text) && !dateRegex.test(text)) {
         return text.match(self.re.phone)[0].length;
       }
 
