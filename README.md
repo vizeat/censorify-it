@@ -15,11 +15,16 @@ yarn add censorify-it
 ## Usage
 
 ```js
-import CensorifyIt from "censorify-it";
+import CensorifyIt from 'censorify-it'
 
-const censorify = new CensorifyIt();
+const censorify = new CensorifyIt()
 
-console.log(censorify.match("Site github.com!"));
+console.log(censorify.process('Hello, here is https://alink.to/a-website can you find it?'))
+// 'Hello, here is ************************** can you find it?'
+console.log(censorify.process('My phone number is +1 123 456 7890'))
+// 'My phone number is ***************'
+
+console.log(censorify.match('Site github.com!'))
 // [ {
 //   schema: "",
 //   index: 5,
@@ -28,7 +33,7 @@ console.log(censorify.match("Site github.com!"));
 //   text: "⏤⏤⏤⏤",
 // } ]
 
-console.log(censorify.match("My phone number is 01 01 01 01 01"));
+console.log(censorify.match('My phone number is 01 01 01 01 01'))
 // [ {
 //   schema: "",
 //   index: 19,
@@ -41,10 +46,10 @@ console.log(censorify.match("My phone number is 01 01 01 01 01"));
 To change the replacement string:
 
 ```js
-const censorify = new CensorifyIt();
-censorify.set({ replacementText: "REMOVED" });
+const censorify = new CensorifyIt()
+censorify.set({ replacementText: 'REMOVED' })
 
-console.log(censorify.match("My phone number is 01 01 01 01 01"));
+console.log(censorify.match('My phone number is 01 01 01 01 01'))
 // [ {
 //   schema: "",
 //   index: 19,
@@ -54,15 +59,17 @@ console.log(censorify.match("My phone number is 01 01 01 01 01"));
 // } ]
 ```
 
-Accepts an exception regex which will not remove matched terms
+Accepts an exceptions array of regex or function
+regex are executed against the raw text that was matched
+functions takes the full match as parameters
 
 ```js
-const mysiteRegex = new RegExp(/mysite.com/g);
+const mysiteRegex = new RegExp(/mysite.com/g)
 
-const censorify = new CensorifyIt();
-censorify.set({ exception: mysiteRegex });
+const censorify = new CensorifyIt()
+censorify.set({ exception: [mysiteRegex] })
 
-console.log(censorify.match("Check out github.com or mysite.com"));
+console.log(censorify.match('Check out github.com or mysite.com'))
 // [ {
 //   schema: "",
 //   index: 10,
