@@ -1,13 +1,13 @@
 import LinkifyIt from 'linkify-it'
 const REPLACEMENT_TEXT = '⏤⏤⏤⏤'
-const telRegex = /(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4,5}/g
+const phoneRegex = /(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4,5}/g
 
 function CensorifyIt () {
   LinkifyIt.call(this)
   this.add('+', {
     validate: function (text, pos, self) {
       if (!self.re.phone) {
-        self.re.phone = new RegExp(telRegex)
+        self.re.phone = new RegExp(phoneRegex)
       }
 
       if (self.re.phone.test(text)) {
@@ -28,9 +28,9 @@ function CensorifyIt () {
 
 CensorifyIt.prototype = Object.create(LinkifyIt.prototype)
 
-CensorifyIt.prototype.set = function set ({ exception, replacementText = REPLACEMENT_TEXT, ...options }) {
+CensorifyIt.prototype.set = function set ({ exceptions = [], replacementText = REPLACEMENT_TEXT, ...options }) {
   LinkifyIt.prototype.set.call(this, options)
-  this.exception = exception
+  this.exceptions = exceptions
   this.replacementText = replacementText
   return this
 }
@@ -43,16 +43,20 @@ function Match (match, text) {
   this.text = text.trim()
 }
 
+CensorifyIt.prototype.matchExceptions = function matchExceptions (text) {
+  return this.exceptions.some((exception) => {
+    if (exception instanceof Function) return exception(text)
+    if (exception instanceof RegExp) return text.match(exception)
+    throw new Error('Exception should either be a Function or a RegExp, got', typeof exception)
+  })
+}
+
 CensorifyIt.prototype.match = function match (text) {
   if (!text) return []
   const matches = LinkifyIt.prototype.match.call(this, text)
   if (!matches) return []
   return matches.map((match, i) => {
-    if (this.exception && match.text.match(this.exception)) {
-      return match
-    }
-
-    return new Match(match, this.replacementText)
+    return this.matchExceptions(text) ? match : new Match(match, this.replacementText)
   })
 }
 
