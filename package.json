@@ -31,10 +31,19 @@
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
-    "core-js": "^3.0.0"
+    "babel-eslint": "^10.0.3",
+    "core-js": "^3.0.0",
+    "eslint": "^6.7.1",
+    "eslint-config-vizeat": "^5.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "prettier-eslint-cli": "^5.0.0"
   },
   "scripts": {
     "build": "BABEL_ENV=production babel src/ --out-dir dist/ --copy-files",
-    "pub": "yarn build && yarn publish && git push --follow-tags"
+    "pub": "yarn build && yarn publish && git push --follow-tags",
+    "lint": "eslint ./",
+    "fmt": "prettier-eslint \"{$(pwd)/*@(.js|.jsx),$(pwd)/!(node_modules|es6|dist|build)/**/*@(.js|.jsx)}\" --write"
   }
 }
