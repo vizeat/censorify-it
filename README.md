@@ -1,5 +1,7 @@
 # censorify-it
 
+[![codecov](https://codecov.io/gh/vizeat/censorify-it/branch/master/graph/badge.svg)](https://codecov.io/gh/vizeat/censorify-it)
+
 Censor unwanted URLs, emails and telephone numbers to prevent spam
 
 Annoyed by spammers & scammers orchestrating fishing attacks with links, phone numbers or email address within your app? CensorifyIt is the answer!
@@ -64,26 +66,39 @@ regex are executed against the raw text that was matched
 functions takes the full match as parameters
 
 ```js
-const mysiteRegex = new RegExp(/mysite.com/g)
-
 const censorify = new CensorifyIt()
-censorify.set({ exception: [mysiteRegex] })
 
-console.log(censorify.match('Check out github.com or mysite.com'))
-// [ {
-//   schema: "",
-//   index: 10,
-//   lastIndex: 20,
-//   raw: "github.com",
-//   text: "⏤⏤⏤⏤",
-// }, {
-//   schema: "",
-//   index: 24,
-//   lastIndex: 34,
-//   raw: "mysite.com",
-//   text: "mysite.com",
-//   url: "http://mysite.com",
-// } ]
+const mysiteRegex = new RegExp(/mysite.com/g)
+const mySophisticatedException = match => match.url === 'http://example.com'
+censorify.set({ exceptions: [mysiteRegex, mySophisticatedException] })
+
+console.log(censorify.match('Check out github.com or mysite.com or even example.com'))
+// [
+//   Match {
+//     schema: '',
+//     index: 10,
+//     lastIndex: 20,
+//     raw: 'github.com',
+//     url: 'http://github.com',
+//     text: '**********'
+//   },
+//   Match {
+//     schema: '',
+//     index: 24,
+//     lastIndex: 34,
+//     raw: 'mysite.com',
+//     url: 'http://mysite.com',
+//     text: 'http://mysite.com'
+//   },
+//   Match {
+//     schema: '',
+//     index: 43,
+//     lastIndex: 54,
+//     raw: 'example.com',
+//     url: 'http://example.com',
+//     text: 'http://example.com'
+//   }
+// ]
 ```
 
 All the other settings and additions as defined by [LinkifyIt](https://github.com/markdown-it/linkify-it/blob/master/README.md#api) also apply.
