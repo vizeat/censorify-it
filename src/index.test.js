@@ -100,19 +100,21 @@ it('Does allow exceptions', () => {
   }
 
   censor.set({
-    exceptions: [matchHostnameFactory('google.com'), matchHostnameFactory('facebook.com')],
+    exceptions: [matchHostnameFactory('google.com'), matchHostnameFactory('facebook.com'), /eatwith.com/i],
   })
 
   const text = `
     Here is a link that will match https://example.com
     Here is a link that will be ignored https://www.google.com/abcd
     Here is a link that witll be enriched developers.facebook.com/hello
+    Here is a link will be matched by regex https://www.eatwith.com
   `
 
   const censoredText = `
     Here is a link that will match *******************
     Here is a link that will be ignored https://www.google.com/abcd
     Here is a link that witll be enriched http://developers.facebook.com/hello
+    Here is a link will be matched by regex https://www.eatwith.com
   `
 
   const processed = censor.process(text)
