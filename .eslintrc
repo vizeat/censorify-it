@@ -1,4 +1,8 @@
 {
   "root": true,
-  "extends": ["vizeat"]
+  "extends": ["vizeat"],
+  "globals": {
+    "it": true,
+    "expect": true
+  }
 }
