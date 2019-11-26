@@ -46,6 +46,7 @@
     "pub": "yarn build && yarn publish && git push --follow-tags",
     "lint": "eslint ./",
     "fmt": "prettier-eslint \"{$(pwd)/*@(.js|.jsx),$(pwd)/!(node_modules|es6|dist|build)/**/*@(.js|.jsx)}\" --write",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --ci --coverage"
   }
 }
