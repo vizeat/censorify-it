@@ -13,7 +13,7 @@ const dateRe = /^((\d{3}[-/]\d{2}[-/]\d{2})|(\d{1}[-/]\d{2}[-/]\d{4})|(\d{0,1}[-
 // Lazily match phone numbers
 // This is a very permissive regex to match as many phone number as possible
 // If you find false positive open a new issue
-const phoneRe = /^[0-9\-(). +]{7,}\b/
+const phoneRe = /^[0-9\-(). +]{6,}[0-9)]{1}\b/
 
 function CensorifyIt () {
   LinkifyIt.call(this)
