@@ -19,6 +19,7 @@ it('Does find phone numbers of various format and do not touch dates', () => {
   const text = `
     Here is a date 2019-12-02
     Here is a fuzzy EU formatted phone number 01 23 45 67 89
+    Here is a phone number +33123456789 with text around
 
     US:
       Local 754-3010
@@ -52,6 +53,7 @@ it('Does find phone numbers of various format and do not touch dates', () => {
   const censoredText = `
     Here is a date 2019-12-02
     Here is a fuzzy EU formatted phone number **************
+    Here is a phone number ************ with text around
 
     US:
       Local ********
