@@ -19,6 +19,7 @@ it('Does find phone numbers of various format and do not touch dates', () => {
   const text = `
     Here is a date 2019-12-02
     Here is a fuzzy EU formatted phone number 01 23 45 67 89
+    Here is a phone number +33123456789 with text around
 
     US:
       Local 754-3010
@@ -52,6 +53,7 @@ it('Does find phone numbers of various format and do not touch dates', () => {
   const censoredText = `
     Here is a date 2019-12-02
     Here is a fuzzy EU formatted phone number **************
+    Here is a phone number ************ with text around
 
     US:
       Local ********
@@ -100,19 +102,21 @@ it('Does allow exceptions', () => {
   }
 
   censor.set({
-    exceptions: [matchHostnameFactory('google.com'), matchHostnameFactory('facebook.com')],
+    exceptions: [matchHostnameFactory('google.com'), matchHostnameFactory('facebook.com'), /eatwith.com/i],
   })
 
   const text = `
     Here is a link that will match https://example.com
     Here is a link that will be ignored https://www.google.com/abcd
     Here is a link that witll be enriched developers.facebook.com/hello
+    Here is a link will be matched by regex https://www.eatwith.com
   `
 
   const censoredText = `
     Here is a link that will match *******************
     Here is a link that will be ignored https://www.google.com/abcd
     Here is a link that witll be enriched http://developers.facebook.com/hello
+    Here is a link will be matched by regex https://www.eatwith.com
   `
 
   const processed = censor.process(text)
