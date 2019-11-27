@@ -27,22 +27,28 @@ console.log(censorify.process('My phone number is +1 123 456 7890'))
 // 'My phone number is ***************'
 
 console.log(censorify.match('Site github.com!'))
-// [ {
-//   schema: "",
-//   index: 5,
-//   lastIndex: 15,
-//   raw: "github.com",
-//   text: "⏤⏤⏤⏤",
-// } ]
+// [
+//   Match {
+//     schema: '',
+//     index: 5,
+//     lastIndex: 15,
+//     raw: 'github.com',
+//     url: 'http://github.com',
+//     text: '**********'
+//   }
+// ]
 
 console.log(censorify.match('My phone number is 01 01 01 01 01'))
-// [ {
-//   schema: "",
-//   index: 19,
-//   lastIndex: 33,
-//   raw: "01 01 01 01 01",
-//   text: "⏤⏤⏤⏤",
-// } ]
+// [
+//   Match {
+//     schema: '0',
+//     index: 19,
+//     lastIndex: 33,
+//     raw: '01 01 01 01 01',
+//     url: '01 01 01 01 01',
+//     text: '**************'
+//   }
+// ]
 ```
 
 To change the replacement string:
@@ -52,13 +58,16 @@ const censorify = new CensorifyIt()
 censorify.set({ replacementText: 'REMOVED' })
 
 console.log(censorify.match('My phone number is 01 01 01 01 01'))
-// [ {
-//   schema: "",
-//   index: 19,
-//   lastIndex: 33,
-//   raw: "01 01 01 01 01",
-//   text: "REMOVED",
-// } ]
+// [
+//   Match {
+//     schema: '0',
+//     index: 19,
+//     lastIndex: 33,
+//     raw: '01 01 01 01 01',
+//     url: '01 01 01 01 01',
+//     text: 'REMOVED'
+//   }
+// ]
 ```
 
 Accepts an exceptions array of regex or function

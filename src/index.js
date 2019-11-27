@@ -71,7 +71,7 @@ CensorifyIt.prototype.matchExceptions = function matchExceptions (match) {
   return this.exceptions.some((exception) => {
     if (exception instanceof Function) return exception(match)
     if (exception instanceof RegExp) return match.raw.match(exception)
-    throw new Error('Exception should either be a Function or a RegExp, got', typeof exception)
+    throw new Error(`Exception should either be a Function or a RegExp, got ${typeof exception}`)
   })
 }
 

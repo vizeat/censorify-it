@@ -1,5 +1,10 @@
 import CensorifyIt from './index'
-const censor = new CensorifyIt()
+let censor = new CensorifyIt()
+
+beforeEach(() => {
+  // clear up censorify's configuration for each test
+  censor = new CensorifyIt()
+})
 
 it('Does find a website url', () => {
   const matches = censor.match('Hello, here is https://alink.to/a-website can you find it?')
@@ -121,4 +126,25 @@ it('Does allow exceptions', () => {
 
   const processed = censor.process(text)
   expect(processed).toBe(censoredText)
+})
+
+it("Does error if an exceptions isn't of a supported type", () => {
+  censor.set({ exceptions: ['This String is not a function nor a regex'] })
+  const text = 'Here is a link https://example.com'
+  expect(() => censor.process(text)).toThrow(new Error('Exception should either be a Function or a RegExp, got string'))
+})
+
+it('Does use an alternative replacement text when provided', () => {
+  // Multi char replacement text is not repeated
+  censor.set({ replacementText: 'REMOVED' })
+  const text = 'Here is a link https://example.com'
+  const censoredText = 'Here is a link REMOVED'
+  const processed = censor.process(text)
+  expect(processed).toBe(censoredText)
+
+  // Single char replacement text is repeated to match the length of the censored text
+  censor.set({ replacementText: '-' })
+  const censoredText2 = 'Here is a link -------------------'
+  const processed2 = censor.process(text)
+  expect(processed2).toBe(censoredText2)
 })

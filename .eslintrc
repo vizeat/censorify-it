@@ -3,6 +3,7 @@
   "extends": ["vizeat"],
   "globals": {
     "it": true,
-    "expect": true
+    "expect": true,
+    "beforeEach": true
   }
 }
