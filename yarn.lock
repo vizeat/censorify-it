@@ -1936,9 +1936,9 @@ eslint-config-standard@^14.1.0:
   integrity sha512-EF6XkrrGVbvv8hL/kYa/m6vnvmUT+K82pJJc4JJVMM6+Qgqh0pnwprSxdduDLB9p/7bIxD+YV5O0wfb8lmcPbA==
 
 eslint-config-vizeat@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.npmjs.org/eslint-config-vizeat/-/eslint-config-vizeat-5.3.0.tgz#076fb2618db85fde3f325d77a79599853cda8df7"
-  integrity sha512-/sVg3e4gd171ZaSXuN5BVMvgSx64ZbIz7J0aVNAhFuybbgjICkpr93RpVR3L3kPPlpYeGZegysji7hglf3onkw==
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-vizeat/-/eslint-config-vizeat-5.5.0.tgz#83ada39d088924f27f427cf86c702884c34ef1e4"
+  integrity sha512-sI2udq1Zo2xcVdikLKCoZpyXg6vR1KS8v2G1QSnL+Ip85/ICKi9ESJjOlqEilSE22PPrqPiMaVZahkPWpz801g==
   dependencies:
     eslint-config-standard "^14.1.0"
     eslint-config-standard-jsx "^8.1.0"
