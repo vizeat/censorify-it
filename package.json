@@ -43,13 +43,13 @@
     "eslint-plugin-react-hooks": "^2.3.0",
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^24.9.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.0"
   },
   "scripts": {
-    "build": "BABEL_ENV=production babel src/ --out-dir dist/ --copy-files",
+    "build": "rimraf dist && BABEL_ENV=production babel src/ --out-dir dist/ --ignore '**/*.test.js','**/__snapshots__/**' --source-maps --verbose",
     "pub": "yarn build && yarn publish && git push --follow-tags",
     "lint": "eslint --cache -c .eslintrc src --ext .js",
-    "fmt": "prettier-eslint \"{$(pwd)/*@(.js|.jsx),$(pwd)/!(node_modules|es6|dist|build)/**/*@(.js|.jsx)}\" --write",
     "test": "jest",
     "test:coverage": "jest --ci --coverage"
   }
