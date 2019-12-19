@@ -15,12 +15,12 @@ const dateRe = /^((\d{3}[-/]\d{2}[-/]\d{2})|(\d{1}[-/]\d{2}[-/]\d{4})|(\d{0,1}[-
 // If you find false positive open a new issue
 const phoneRe = /^[0-9\-(). +]{6,}[0-9)]{1}\b/
 
-function CensorifyIt () {
+function CensorifyIt() {
   LinkifyIt.call(this)
 
   // Match international format with leading +
   this.add('+', {
-    validate: function (text, pos, self) {
+    validate: function(text, pos, self) {
       const tail = text.slice(pos)
 
       if (!self.re.phone) {
@@ -51,14 +51,14 @@ function CensorifyIt () {
 
 CensorifyIt.prototype = Object.create(LinkifyIt.prototype)
 
-CensorifyIt.prototype.set = function set ({ exceptions = [], replacementText = REPLACEMENT_TEXT, ...options }) {
+CensorifyIt.prototype.set = function set({ exceptions = [], replacementText = REPLACEMENT_TEXT, ...options }) {
   LinkifyIt.prototype.set.call(this, options)
   this.exceptions = exceptions
   this.replacementText = replacementText
   return this
 }
 
-function Match (match, text) {
+function Match(match, text) {
   this.schema = match.schema
   this.index = match.index
   this.lastIndex = match.lastIndex
@@ -67,7 +67,7 @@ function Match (match, text) {
   this.text = text.trim()
 }
 
-CensorifyIt.prototype.matchExceptions = function matchExceptions (match) {
+CensorifyIt.prototype.matchExceptions = function matchExceptions(match) {
   return this.exceptions.some((exception) => {
     if (exception instanceof Function) return exception(match)
     if (exception instanceof RegExp) return match.raw.match(exception)
@@ -75,14 +75,14 @@ CensorifyIt.prototype.matchExceptions = function matchExceptions (match) {
   })
 }
 
-CensorifyIt.prototype.replace = function replace (length = 1) {
+CensorifyIt.prototype.replace = function replace(length = 1) {
   if (this.replacementText.length === 1) {
     return this.replacementText.repeat(length)
   }
   return this.replacementText
 }
 
-CensorifyIt.prototype.match = function match (text) {
+CensorifyIt.prototype.match = function match(text) {
   if (!text) return []
   const matches = LinkifyIt.prototype.match.call(this, text)
   if (!matches) return []
@@ -92,7 +92,7 @@ CensorifyIt.prototype.match = function match (text) {
   })
 }
 
-CensorifyIt.prototype.process = function process (text) {
+CensorifyIt.prototype.process = function process(text) {
   return this.match(text).reduce((acc, match) => acc.replace(match.raw, match.text), text)
 }
 

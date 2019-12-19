@@ -48,7 +48,7 @@
   "scripts": {
     "build": "BABEL_ENV=production babel src/ --out-dir dist/ --copy-files",
     "pub": "yarn build && yarn publish && git push --follow-tags",
-    "lint": "eslint ./",
+    "lint": "eslint --cache -c .eslintrc src --ext .js",
     "fmt": "prettier-eslint \"{$(pwd)/*@(.js|.jsx),$(pwd)/!(node_modules|es6|dist|build)/**/*@(.js|.jsx)}\" --write",
     "test": "jest",
     "test:coverage": "jest --ci --coverage"

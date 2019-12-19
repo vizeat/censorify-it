@@ -94,9 +94,9 @@ it('Does find phone numbers of various format and do not touch dates', () => {
 })
 
 it('Does allow exceptions', () => {
-  function matchHostnameFactory (hostname) {
+  function matchHostnameFactory(hostname) {
     const regexp = new RegExp(hostname, 'i')
-    return function matchHostname (match) {
+    return function matchHostname(match) {
       try {
         const url = new URL(match.url)
         return regexp.test(url.hostname)
