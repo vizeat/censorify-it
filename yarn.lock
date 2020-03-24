@@ -2020,10 +2020,10 @@ eslint-config-standard@^14.1.0:
   resolved "https://registry.npmjs.org/eslint-config-standard/-/eslint-config-standard-14.1.0.tgz#b23da2b76fe5a2eba668374f246454e7058f15d4"
   integrity sha512-EF6XkrrGVbvv8hL/kYa/m6vnvmUT+K82pJJc4JJVMM6+Qgqh0pnwprSxdduDLB9p/7bIxD+YV5O0wfb8lmcPbA==
 
-eslint-config-vizeat@^7.0.1:
-  version "7.6.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-vizeat/-/eslint-config-vizeat-7.6.0.tgz#2746ae69caefdf88aa0c73b87a961550270b31be"
-  integrity sha512-BO9eXlGTddMIXCrEBl/61EXlyBWg2c24OPO+Pc+rqTYqI1ETGuAp3MHDINrO2uIQEq9sEesD2NGCAD2FOl8OwA==
+eslint-config-vizeat@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-vizeat/-/eslint-config-vizeat-8.0.0.tgz#b75423b52e44b95893d924ff2484187bcdcfc853"
+  integrity sha512-wFeVY3ki+s1aK9p7840go0y17+LdlghXLKz5BMvnm9/GsW8HqBS1CqDBdmhyW+K8xZxM9uy/fV3sw5ipaIYsmg==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^2.13.0"
     "@typescript-eslint/parser" "^2.13.0"
