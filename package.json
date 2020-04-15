@@ -1,6 +1,6 @@
 {
   "name": "censorify-it",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "Censor unwanted URLs, emails and telephone numbers to prevent spam",
   "author": "vizeat",
   "homepage": "https://github.com/vizeat/censorify-it",
