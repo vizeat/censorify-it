@@ -20,7 +20,7 @@ function CensorifyIt() {
 
   // Match international format with leading +
   this.add('+', {
-    validate: function(text, pos, self) {
+    validate: function (text, pos, self) {
       const tail = text.slice(pos)
 
       if (!self.re.phone) {
