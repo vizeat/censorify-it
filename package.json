@@ -18,7 +18,7 @@
   "license": "MIT",
   "main": "dist/index.js",
   "dependencies": {
-    "linkify-it": "^2.2.0"
+    "linkify-it": "^3.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
