@@ -32,11 +32,13 @@ const strictPhoneRe = /(^|[^\w+])(\+?\(?\d[\d ().\u00a0-]*\d)(?!\w)/g
 const strictDateRe = /\b(?:(?:19|20)\d{2}[-.]\d{1,2}[-.]\d{1,2}|\d{1,2}[-.]\d{1,2}[-.](?:19|20)\d{2})\b/g
 
 export type MatchType = 'link' | 'email' | 'phone'
+/** The strict detection does not look for emails */
+export type StrictMatchType = Exclude<MatchType, 'email'>
 
 /** What a detection finds in a text, before exceptions are applied */
-export interface Found {
+export interface Found<T extends MatchType = MatchType> {
   schema: string
-  type: MatchType
+  type: T
   index: number
   lastIndex: number
   raw: string
@@ -58,9 +60,9 @@ export interface Options extends LinkifyIt.Options {
   replacementText?: string
 }
 
-export class Match implements LinkifyIt.Match {
+export class Match<T extends MatchType = MatchType> implements LinkifyIt.Match {
   schema: string
-  type: MatchType
+  type: T
   index: number
   lastIndex: number
   /** The text as it was found */
@@ -69,7 +71,7 @@ export class Match implements LinkifyIt.Match {
   /** What `process` puts in place of the raw text: stars, or the url of an exception */
   text: string
 
-  constructor(found: Found, text: string) {
+  constructor(found: Found<T>, text: string) {
     this.schema = found.schema
     this.type = found.type
     this.index = found.index
@@ -148,10 +150,10 @@ export class CensorifyIt extends LinkifyIt {
   }
 
   /** Links and phone numbers found by the strict detection, exceptions not applied yet */
-  matchStrict(text?: string | null): Found[] {
+  matchStrict(text?: string | null): Found<StrictMatchType>[] {
     if (!text) return []
 
-    const links = Array.from(text.matchAll(strictLinkRe), (found): Found => {
+    const links = Array.from(text.matchAll(strictLinkRe), (found): Found<StrictMatchType> => {
       const raw = found[2].replace(trailingPunctuationRe, '')
       const index = found.index + found[1].length
       const url = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : `http://${raw}`
@@ -160,7 +162,7 @@ export class CensorifyIt extends LinkifyIt {
 
     // the digits of a link (an event id) or of a date are not a phone number
     const withoutLinksAndDates = blank(blank(text, strictLinkRe), strictDateRe)
-    const phones = Array.from(withoutLinksAndDates.matchAll(strictPhoneRe), (found): Found => {
+    const phones = Array.from(withoutLinksAndDates.matchAll(strictPhoneRe), (found): Found<StrictMatchType> => {
       // "(06 12 34 56 78)" is found without its closing parenthesis: drop the opening one
       const unbalanced = found[2].startsWith('(') && !found[2].includes(')')
       const raw = unbalanced ? found[2].slice(1) : found[2]
@@ -201,7 +203,7 @@ export class CensorifyIt extends LinkifyIt {
    * The links and phone numbers a text should be refused for: found by the strict detection, and not allowed by
    * an exception
    */
-  forbidden(text?: string | null): Match[] {
+  forbidden(text?: string | null): Match<StrictMatchType>[] {
     return this.matchStrict(text)
       .filter((found) => !this.matchExceptions(found))
       .map((found) => new Match(found, found.raw))
