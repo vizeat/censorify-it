@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "yarn"
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Lint
+        run: yarn lint
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "yarn"
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Check types
+        run: yarn check-build
+      - name: Build
+        run: yarn build
+      - name: Load the package both ways
+        run: |
+          node --input-type=module -e "import CensorifyIt from 'censorify-it'; new CensorifyIt().forbidden('evil.cfd/a/x')"
+          node -e "const { default: CensorifyIt } = require('censorify-it'); new CensorifyIt().forbidden('evil.cfd/a/x')"
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "yarn"
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test with coverage
+        run: yarn coverage
+        env:
+          CI: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          report_type: coverage
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          report_type: test_results

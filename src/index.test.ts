@@ -1,4 +1,6 @@
-import CensorifyIt from './index'
+import { describe, it, expect, beforeEach } from 'vitest'
+import CensorifyIt, { CensorifyIt as NamedCensorifyIt, Match } from './index.js'
+
 let censor = new CensorifyIt()
 
 beforeEach(() => {
@@ -94,13 +96,13 @@ it('Does find phone numbers of various format and do not touch dates', () => {
 })
 
 it('Does allow exceptions', () => {
-  function matchHostnameFactory(hostname) {
+  function matchHostnameFactory(hostname: string) {
     const regexp = new RegExp(hostname, 'i')
-    return function matchHostname(match) {
+    return function matchHostname(match: { url: string }) {
       try {
         const url = new URL(match.url)
         return regexp.test(url.hostname)
-      } catch (e) {
+      } catch {
         return false
       }
     }
@@ -129,7 +131,7 @@ it('Does allow exceptions', () => {
 })
 
 it("Does error if an exceptions isn't of a supported type", () => {
-  censor.set({ exceptions: ['This String is not a function nor a regex'] })
+  censor.set({ exceptions: ['This String is not a function nor a regex' as never] })
   const text = 'Here is a link https://example.com'
   expect(() => censor.process(text)).toThrow(new Error('Exception should either be a Function or a RegExp, got string'))
 })
@@ -186,7 +188,7 @@ describe('strict detection', () => {
     censor.set({ exceptions: ours })
   })
 
-  const forbidden = (text) => censor.forbidden(text).map(({ type, raw }) => [type, raw])
+  const forbidden = (text?: string | null) => censor.forbidden(text).map(({ type, raw }) => [type, raw])
 
   it.each([
     ['Please verify your account: https://evil.cfd/a/x1y2z3', 'https://evil.cfd/a/x1y2z3'],
@@ -269,5 +271,17 @@ describe('strict detection', () => {
     expect(censor.process('go to evil.cfd/a/x now')).toBe('go to ************ now')
     // a strict link wins over the loose match it holds
     expect(censor.process('evil.cfd?eatwith.com/verify')).toBe('***************************')
+  })
+})
+
+describe('package', () => {
+  it('Does export the class as default and by its name', () => {
+    expect(NamedCensorifyIt).toBe(CensorifyIt)
+    expect(new CensorifyIt().match('https://alink.to/x')[0]).toBeInstanceOf(Match)
+  })
+
+  it('Does keep the features of LinkifyIt', () => {
+    expect(new CensorifyIt().test('https://alink.to/x')).toBe(true)
+    expect(new CensorifyIt().set({ fuzzyLink: false }).match('alink.to')).toEqual([])
   })
 })

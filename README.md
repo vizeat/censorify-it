@@ -14,6 +14,13 @@ Built as an extension of [LinkifyIt](https://github.com/markdown-it/linkify-it)
 yarn add censorify-it
 ```
 
+The package is written in TypeScript and ships its types. It is an ES module, with a CommonJS build:
+
+```js
+import CensorifyIt from 'censorify-it' // or: import { CensorifyIt } from 'censorify-it'
+const { CensorifyIt } = require('censorify-it')
+```
+
 ## Usage
 
 ```js
@@ -145,3 +152,13 @@ console.log(censorify.forbidden('Go to evil.cfd/a/x or call 06 12 34 56 78, we a
 Everything `forbidden` reports is censored by `process` as well.
 
 All the other settings and additions as defined by [LinkifyIt](https://github.com/markdown-it/linkify-it/blob/master/README.md#api) also apply.
+
+## Development
+
+```
+yarn test        # vitest, in watch mode
+yarn coverage    # one run, with coverage
+yarn lint
+yarn check-build # type check
+yarn build       # vite, to dist/
+```
