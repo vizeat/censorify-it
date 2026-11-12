@@ -1,4 +1,4 @@
-import LinkifyIt from 'linkify-it'
+import LinkifyIt, { type Options as LinkifyOptions } from 'linkify-it'
 
 const REPLACEMENT_TEXT = '*'
 
@@ -55,12 +55,12 @@ export type Exception = RegExp | ((found: Found) => unknown)
  */
 export type Exceptions = Exception[] | Partial<Record<MatchType, Exception[]>>
 
-export interface Options extends LinkifyIt.Options {
+export interface Options extends LinkifyOptions {
   exceptions?: Exceptions
   replacementText?: string
 }
 
-export class Match<T extends MatchType = MatchType> implements LinkifyIt.Match {
+export class Match<T extends MatchType = MatchType> {
   schema: string
   type: T
   index: number

@@ -34,25 +34,25 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@types/linkify-it": "^3.0.5",
-    "linkify-it": "^3.0.2"
+    "@types/linkify-it": "^5.0.0",
+    "linkify-it": "^5.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.1",
+    "@commitlint/cli": "^21",
     "@eatwith/commitlint-config-conventional": "^1.0.0",
     "@microsoft/api-extractor": "^7.59.3",
-    "@types/node": "^22",
-    "@vitest/coverage-v8": "4.1.11",
+    "@types/node": "^24",
+    "@vitest/coverage-v8": "^5",
     "eslint": "^10.8.0",
     "eslint-config-vizeat": "^13.0.0",
     "globals": "^17.0.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.1.6",
+    "lint-staged": "^17",
     "prettier": "^3.9.6",
-    "typescript": "^5.9.2",
+    "typescript": "^6",
     "vite": "^8.2.0",
     "vite-plugin-dts": "^5.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^5"
   },
   "scripts": {
     "build": "vite build",

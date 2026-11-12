@@ -285,3 +285,12 @@ describe('package', () => {
     expect(new CensorifyIt().set({ fuzzyLink: false }).match('alink.to')).toEqual([])
   })
 })
+
+// linkify-it 6 stops finding these: do not move to it without making up for them
+describe('linkify-it upgrades', () => {
+  it('Does censor an email written right after a label, and a domain with a port', () => {
+    const censor = new CensorifyIt()
+    expect(censor.process('email:john@example.com')).toBe('**********************')
+    expect(censor.process('go to evil.com:8080 now')).toBe('go to ************* now')
+  })
+})
