@@ -110,4 +110,38 @@ console.log(censorify.match('Check out github.com or mysite.com or even example.
 // ]
 ```
 
+Every match has a `type`: `link`, `email` or `phone`. Exceptions can be given by type, which is safer than a single
+list: a loose phone number pattern in a single list also lets through the links holding these digits.
+
+```js
+censorify.set({
+  exceptions: {
+    link: [/^(?:https?:\/\/)?(?:[\w-]+\.)*mysite\.com(?=[/?#]|$)/i],
+    phone: [/\+33.?1.?23.?45.?67.?89/],
+  },
+})
+```
+
+## Refusing a text instead of censoring it
+
+Censoring can afford false positives: a date taken for a phone number only costs a few stars. Refusing a text
+cannot. `forbidden` only reports what is a link or a phone number beyond doubt, exceptions applied:
+
+- links: `scheme://`, `www.`, `domain/path` or `domain?query`, whatever the TLD. A bare domain is not reported,
+  it would also catch a missing space after a period (`see you soon.In any case`);
+- phone numbers: international ones (`+…`, `00…`) from 8 digits, national ones from 9 digits. Dates and lists of
+  small numbers (`12 15 20 25 30 people`) are left aside.
+
+```js
+const censorify = new CensorifyIt()
+
+console.log(censorify.forbidden('Go to evil.cfd/a/x or call 06 12 34 56 78, we are 12 on 2026-11-20'))
+// [
+//   Match { schema: '', type: 'link', index: 6, lastIndex: 18, raw: 'evil.cfd/a/x', url: 'http://evil.cfd/a/x', text: 'evil.cfd/a/x' },
+//   Match { schema: '', type: 'phone', index: 27, lastIndex: 41, raw: '06 12 34 56 78', url: '06 12 34 56 78', text: '06 12 34 56 78' }
+// ]
+```
+
+Everything `forbidden` reports is censored by `process` as well.
+
 All the other settings and additions as defined by [LinkifyIt](https://github.com/markdown-it/linkify-it/blob/master/README.md#api) also apply.

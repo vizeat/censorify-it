@@ -148,3 +148,126 @@ it('Does use an alternative replacement text when provided', () => {
   const processed2 = censor.process(text)
   expect(processed2).toBe(censoredText2)
 })
+
+describe('types of matches', () => {
+  it('Does tell links, emails and phone numbers apart', () => {
+    const matches = censor.match('https://alink.to/x or john.doe@gmail.com or 01 23 45 67 89')
+    expect(matches.map(({ type, raw }) => [type, raw])).toEqual([
+      ['link', 'https://alink.to/x'],
+      ['email', 'john.doe@gmail.com'],
+      ['phone', '01 23 45 67 89'],
+    ])
+  })
+
+  it('Does apply exceptions by type of match', () => {
+    const supportPhone = /33.?1.?23.?45.?67.?89/
+    const text = 'Call +33 1 23 45 67 89 or go to https://evil.com/33123456789 or https://www.eatwith.com/x'
+
+    // a single list: the loose phone pattern also lets the link through
+    censor.set({ exceptions: [/^https:\/\/www\.eatwith\.com/, supportPhone] })
+    expect(censor.process(text)).toBe(
+      'Call +33 1 23 45 67 89 or go to https://evil.com/33123456789 or https://www.eatwith.com/x',
+    )
+
+    censor.set({ exceptions: { link: [/^https:\/\/www\.eatwith\.com/], phone: [supportPhone] } })
+    expect(censor.process(text)).toBe(
+      'Call +33 1 23 45 67 89 or go to **************************** or https://www.eatwith.com/x',
+    )
+  })
+})
+
+describe('strict detection', () => {
+  const ours = {
+    link: [/^(?:https?:\/\/)?(?:[\w-]+\.)*eatwith\.com(?=[/?#]|$)/i],
+    phone: [/\+?(33.?1.?2.?3.?4.?5.?6.?7.?8.?9|\(?844\)?.?5.?5.?5.?0.?1.?0.?0)/],
+  }
+
+  beforeEach(() => {
+    censor.set({ exceptions: ours })
+  })
+
+  const forbidden = (text) => censor.forbidden(text).map(({ type, raw }) => [type, raw])
+
+  it.each([
+    ['Please verify your account: https://evil.cfd/a/x1y2z3', 'https://evil.cfd/a/x1y2z3'],
+    ['evil.cfd/a/x1y2z3', 'evil.cfd/a/x1y2z3'],
+    ['go to www.evil.cfd now', 'www.evil.cfd'],
+    ['see (https://evil.cfd/a/x).', 'https://evil.cfd/a/x'],
+    ['https://evil.cfd/eatwith.com/a/x', 'https://evil.cfd/eatwith.com/a/x'],
+    ['https://secure-eatwith.com/verify', 'https://secure-eatwith.com/verify'],
+    ['https://eatwith.com.evil.cfd/', 'https://eatwith.com.evil.cfd/'],
+    ['https://eatwith.com@evil.cfd/', 'https://eatwith.com@evil.cfd/'],
+    ['evil.cfd?eatwith.com/verify', 'evil.cfd?eatwith.com/verify'],
+    ['https://evil.cfd/33123456789', 'https://evil.cfd/33123456789'],
+    ['write me on t.me/some_support', 't.me/some_support'],
+    ['tg://resolve?domain=some_support', 'tg://resolve?domain=some_support'],
+  ])('Does forbid the link of "%s"', (text, link) => {
+    expect(forbidden(text)).toEqual([['link', link]])
+  })
+
+  it.each([
+    ['call me on +33 6 12 34 56 78', '+33 6 12 34 56 78'],
+    ['my number: 06 12 34 56 78.', '06 12 34 56 78'],
+    ['06.12.34.56.78', '06.12.34.56.78'],
+    ['0612345678', '0612345678'],
+    ['0 6 1 2 3 4 5 6 7 8', '0 6 1 2 3 4 5 6 7 8'],
+    ['whatsapp 0033612345678 please', '0033612345678'],
+    ['US cell (555) 123-4567', '(555) 123-4567'],
+    ['UK 07911 123456', '07911 123456'],
+    ['Italy 333 1234567', '333 1234567'],
+    ['Denmark +45 12 34 56 78', '+45 12 34 56 78'],
+    ['(06 12 34 56 78)', '06 12 34 56 78'],
+    ['Hello!\nMy phone is +447911123456\nThanks', '+447911123456'],
+  ])('Does forbid the phone number of "%s"', (text, phone) => {
+    expect(forbidden(text)).toEqual([['phone', phone]])
+  })
+
+  it.each([
+    'Hello, we are 4 people and would love to join on 12/11 or 13/11 around 7.30pm!',
+    'See you soon.In any case, thank you.My email is john.doe1234567890@gmail.com',
+    'Is lunch/dinner possible? Budget is 25.50€/person, a.m./p.m. both work.',
+    'We are 12 adults and 3 kids, aged 5 7 9, budget 1500-2000 euros',
+    'Could we come on 2026-11-20 or 2026-11-21? Or from 2026-11-20 - 2026-11-22',
+    'On 20.11.2026 at 19.30, or on 21-11-2026 at 20.00',
+    'Our group: 12 15 20 25 30 people over five dates',
+    'I saw your event https://www.eatwith.com/events/123456789?date=2026-12-01.',
+    'I saw it on eatwith.com, (www.eatwith.com) and booking reference #4954127',
+    'You can call us on +33 1 23 45 67 89 or (844) 555-0100',
+    '',
+    null,
+    undefined,
+  ])('Does not forbid anything in "%s"', (text) => {
+    expect(forbidden(text)).toEqual([])
+  })
+
+  it('Does give the position of what it forbids', () => {
+    const text = 'Go to www.evil.com or call 06 12 34 56 78'
+    expect(censor.forbidden(text).map(({ index, lastIndex }) => text.slice(index, lastIndex))).toEqual([
+      'www.evil.com',
+      '06 12 34 56 78',
+    ])
+  })
+
+  it('Does censor everything it forbids', () => {
+    const texts = [
+      'evil.cfd/a/x1y2z3',
+      'evil.cfd?eatwith.com/verify',
+      'go to www.evil.cfd now or t.me/some_support',
+      'call me on +33 6 12 34 56 78 or (555) 123-4567',
+      'Hello!\nMy phone is +447911123456\nThanks',
+    ]
+
+    texts.forEach((text) => {
+      const processed = censor.process(text)
+      const found = censor.forbidden(text)
+      expect(found.length).toBeGreaterThan(0)
+      found.forEach(({ raw }) => expect(processed).not.toContain(raw))
+    })
+  })
+
+  it('Does censor a link written without scheme on an unknown TLD', () => {
+    expect(censor.process('go to evil.cfd/a/x now')).toBe('go to ************ now')
+    // a strict link wins over the loose match it holds
+    expect(censor.process('evil.cfd?eatwith.com/verify')).toBe('***************************')
+  })
+})
